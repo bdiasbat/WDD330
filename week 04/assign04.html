@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 04</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="animatedvillage.js"></script>
+    <script src="chapter/07_robot.js"></script>
+
+</head>
+
+<body>
+    <h1>Week 04 Readings</h1>
+    <h2>Chapter 8</h2>
+    <p>Forms: <br>
+        "Forms are made up of a 'form' element that contains form controls such as input fields, select menus and
+        buttons." <br>
+        Forms were originally used to send information to the server through back-end laguanges like PHP and Ruby. With
+        JavaScript, however, we are able to process that information with a "front-end" language.</p><br><br>
+    <h2>Chapter 12</h2>
+    <p>Object-oriented programming in JavaScript: <br>
+        "Object-oriented programming is often used to model representations of objects in the real world. There are
+        three main concepts in OOP: encapsulation, polymorphism and inheritance."<br>
+        many object-oriented languages are known as class-based languages. That's due to the fact that we use classes to
+        define the object's "sketch" or design. <br>
+        For what I understand, object-oriented programming is when you think about objects and classes forst and then
+        write the funcitons around that instead of the other way around.</p>
+    <h2>Exercises 6-10</h2>
+    <p>Open console to see exercises</p>
+    <script>
+        class Temperature {
+            constructor(celsius) {
+                this.celsius = celsius;
+            }
+            get fahrenheit() {
+                return this.celsius * 1.8 + 32;
+            }
+            set fahrenheit(value) {
+                this.celsius = (value - 32) / 1.8;
+            }
+
+            static fromFahrenheit(value) {
+                return new Temperature((value - 32) / 1.8);
+            }
+        }
+
+        let temp = new Temperature(22);
+        console.log(temp.fahrenheit);
+        temp.fahrenheit = 86;
+        console.log(temp.celsius);
+
+        runRobotAnimation(VillageState.random(),
+            goalOrientedRobot, []);
+
+        function parseINI(string) {
+            // Start with an object to hold the top-level fields
+            let result = {};
+            let section = result;
+            string.split(/\r?\n/).forEach(line => {
+                let match;
+                if (match = line.match(/^(\w+)=(.*)$/)) {
+                    section[match[1]] = match[2];
+                } else if (match = line.match(/^\[(.*)\]$/)) {
+                    section = result[match[1]] = {};
+                } else if (!/^\s*(;.*)?$/.test(line)) {
+                    throw new Error("Line '" + line + "' is not valid.");
+                }
+            });
+            return result;
+        }
+
+        console.log(parseINI(`
+name=Vasilis
+[address]
+city=Tessaloniki`));
+    </script>
+</body>
+
+</html>
