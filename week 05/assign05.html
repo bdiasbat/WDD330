@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week 05</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <h1>Week 05 Readings</h1>
+    <h2>Chapter 10</h2>
+    <p>Testing and Debugging</p>
+    <h3>Errors, exceptions, and warnings</h3>
+    <p>Errors are usually caused by System Error, Programmer Error, User Error. Even though we as progammers do not know
+        how external systems work, we still need to be aware and mindful of them.</p>
+    <p>Exceptions are errors that return a value that can be used by the program to deal with the error by itself.</p>
+    <p>Stack Traces is a sequence of functions that helps locating where the error occurred</p>
+    <p>Warnings let the user know there's an error but it doesn't stops the program from working.</p>
+    <h3>The importance of testing and debugging</h3>
+    <p>Because JavaScript is a very forgiving language, programmers need to make sure the code fails loudly during
+        development.</p>
+    <h3>Strict mode</h3>
+    <p>Strict mode helps the programmers identify more errors earlier on.</p>
+    <p>"Not using strict mode is often referred to as 'sloppy mode' as it’s forgiving of sloppy programming practices. "
+    </p>
+    <h2>Exercises displayed on the console.</h2>
+
+    <script>
+        class MultiplicatorUnitFailure extends Error { }
+
+        function primitiveMultiply(a, b) {
+            if (Math.random() < 0.2) {
+                return a * b;
+            } else {
+                throw new MultiplicatorUnitFailure("Klunk");
+            }
+        }
+
+        function reliableMultiply(a, b) {
+            for (; ;) {
+                try {
+                    return primitiveMultiply(a, b);
+                } catch (e) {
+                    if (!(e instanceof MultiplicatorUnitFailure))
+                        throw e;
+                }
+            }
+        }
+
+        console.log(reliableMultiply(8, 8));
+        // → 64
+
+        const box = {
+            locked: true,
+            unlock() { this.locked = false; },
+            lock() { this.locked = true; },
+            _content: [],
+            get content() {
+                if (this.locked) throw new Error("Locked!");
+                return this._content;
+            }
+        };
+
+        function withBoxUnlocked(body) {
+            let locked = box.locked;
+            if (!locked) {
+                return body();
+            }
+
+            box.unlock();
+            try {
+                return body();
+            } finally {
+                box.lock();
+            }
+        }
+
+        withBoxUnlocked(function () {
+            box.content.push("gold piece");
+        });
+
+        try {
+            withBoxUnlocked(function () {
+                throw new Error("Pirates on the horizon! Abort!");
+            });
+        } catch (e) {
+            console.log("Error raised:", e);
+        }
+
+        console.log(box.locked);
+// → true
+    </script>
+</body>
+
+</html>
